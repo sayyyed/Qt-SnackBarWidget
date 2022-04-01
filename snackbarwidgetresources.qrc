@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>SnackBarWidgetResources/About-icon.png</file>
+        <file>SnackBarWidgetResources/close-window-icon.png</file>
+    </qresource>
+</RCC>
