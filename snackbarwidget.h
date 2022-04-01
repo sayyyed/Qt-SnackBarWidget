@@ -24,7 +24,7 @@ public:
     Q_ENUM(Position)
 
     explicit SnackBarWidget(const QString &message,
-                            int autoHideDuration = 3000,
+                            int autoHideDuration = 5000,
                             Position anchorOrigin = TOPRIGHT,
                             const QString &icon = QString(),
                             const QString &closeIcon = QString(),

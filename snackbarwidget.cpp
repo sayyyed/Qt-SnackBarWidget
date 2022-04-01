@@ -6,6 +6,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QSequentialAnimationGroup>
 #include <QPauseAnimation>
+#include <QDebug>
 
 SnackBarWidget::SnackBarWidget(const QString &message,
                                int autoHideDuration,
@@ -18,13 +19,15 @@ SnackBarWidget::SnackBarWidget(const QString &message,
     ui(new Ui::SnackBarWidget)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::SubWindow);
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_TranslucentBackground);
 
-    setLayoutDirection(Qt::LeftToRight);
+    setWindowOpacity(0.9);
 
     ui->messageLabel->setText(message);
+    this->adjustSize();
+
     if(!icon.isEmpty())
         ui->iconLabel->setPixmap(QPixmap(icon));
     if(!closeIcon.isEmpty())
@@ -33,19 +36,25 @@ SnackBarWidget::SnackBarWidget(const QString &message,
     if(color.name() != "#2E7D32")
     {
         ui->frame->setStyleSheet(QString(R"(
+                                         #frame{
                                          background-color: %0;
                                          border: transparent;
                                          border-radius: 5px;
                                          padding: 10px;
+                                         }
                                          )").arg(color.name()));
     }
 
+    QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(this);
+    shadow->setOffset(0);
+    shadow->setBlurRadius(10.0);
+    ui->frame->setGraphicsEffect(shadow);
 //    QTimer::singleShot(autoHideDuration, this, &SnackBarWidget::close);
     connect(ui->closeBtn, &QToolButton::clicked, this, &SnackBarWidget::close);
 
     int srcX, srcY;
     int targetX, targetY;
-    int padding = 20;
+    int padding = 10;
     QDesktopWidget *screen = qApp->desktop();
     switch (anchorOrigin) {
     case TOPLEFT:
